@@ -2,7 +2,7 @@ import "./App.scss";
 import avatar from "./images/bozai.png";
 import { useState } from "react";
 import orderBy from "lodash/orderBy";
-
+import classNames from "classnames";
 // 导航 Tab 数组
 const tabs = [
   { type: "hot", text: "最热" },
@@ -136,7 +136,7 @@ const App = () => {
           <li className="nav-title">
             <span className="nav-title-text">评论</span>
             {/* 评论数量 */}
-            <span className="total-reply">{list.length}</span>
+            <span className={classNames("total-reply", "")}>{list.length}</span>
           </li>
           <li className="nav-sort ">
             {/* 高亮类名： active */}
@@ -144,9 +144,13 @@ const App = () => {
               return (
                 <div
                   key={item.type}
-                  className={
-                    item.type === activeTab ? "nav-item active" : "nav-item"
-                  }
+                  // className={
+                  //   item.type === activeTab ? "nav-item active" : "nav-item"
+                  // }
+                  className={classNames(
+                    "nav-item",
+                    item.type === activeTab && "active"
+                  )}
                   onClick={() => onToggle(item.type)}
                 >
                   {item.text}
@@ -211,11 +215,15 @@ const App = () => {
                       <span className="reply-like">
                         {/* 选中类名： liked */}
                         <i
-                          className={
-                            item.action === 1
-                              ? "icon like-icon liked"
-                              : "icon like-icon"
-                          }
+                          // className={
+                          //   item.action === 1
+                          //     ? "icon like-icon liked"
+                          //     : "icon like-icon"
+                          // }
+                          className={classNames(
+                            "icon like-icon",
+                            item.action === 1 && "liked"
+                          )}
                           onClick={() => onLike(item.rpid)}
                         />
                         <span>{item.like}</span>
@@ -224,11 +232,15 @@ const App = () => {
                       <span className="reply-dislike">
                         {/* 选中类名： disliked */}
                         <i
-                          className={
-                            item.action === 2
-                              ? "icon dislike-icon disliked"
-                              : "icon dislike-icon"
-                          }
+                          // className={
+                          //   item.action === 2
+                          //     ? "icon dislike-icon disliked"
+                          //     : "icon dislike-icon"
+                          // }
+                          className={classNames(
+                            "icon dislike-icon",
+                            item.action === 2 && "disliked"
+                          )}
                           onClick={() => onDislike(item.rpid)}
                         />
                       </span>

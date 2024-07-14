@@ -1,8 +1,10 @@
 import "./App.scss";
 import avatar from "./images/bozai.png";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import orderBy from "lodash/orderBy";
 import classNames from "classnames";
+import dayjs from "dayjs";
+
 // 导航 Tab 数组
 const tabs = [
   { type: "hot", text: "最热" },
@@ -72,6 +74,13 @@ const App = () => {
 
   //切换状态
   const [activeTab, setActiveTab] = useState("hot");
+
+  //文本框状态
+  const [value, setValue] = useState("");
+
+  //焦点
+  const textRef = useRef(null);
+
   //删除评论
   const onDelete = (rpid) => {
     setList(list.filter((item) => item.rpid !== rpid));
@@ -128,6 +137,39 @@ const App = () => {
     setList(newList);
   };
 
+  const onAdd = () => {
+    if (value.trim() === "") {
+      return textRef.current.focus();
+    }
+
+    console.log(value);
+    //组件新评论
+    const comment = {
+      // 评论id
+      rpid: list.length + 1,
+      // 用户信息
+      user: user,
+      // 评论内容
+      content: value,
+      // 评论时间
+      ctime: dayjs().format("MM-dd HH:mm"),
+      // 喜欢数量
+      like: 0,
+      // 0：未表态 1: 喜欢 2: 不喜欢
+      action: 0,
+    };
+    //加入到现有的评论列表
+    const newList = [comment, ...list];
+    //排序
+    if (tabs === "time") {
+      setList(orderBy(newList, "ctime", "dsc"));
+    } else {
+      setList(orderBy(newList, "like", "dsc"));
+    }
+    //清空已发布评论
+    setValue("");
+  };
+
   return (
     <div className="app">
       {/* 导航 Tab */}
@@ -175,9 +217,17 @@ const App = () => {
             <textarea
               className="reply-box-textarea"
               placeholder="发一条友善的评论"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              ref={textRef}
             />
             {/* 发布按钮 */}
-            <div className="reply-box-send">
+            <div
+              className="reply-box-send"
+              onClick={() => {
+                onAdd();
+              }}
+            >
               <div className="send-text">发布</div>
             </div>
           </div>

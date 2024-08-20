@@ -8,29 +8,28 @@ import { useState } from "react";
 //  2.1 父组件准备修改状态的函数，并传递给子组件
 //  2.2 子组件调用函数，并回传数据
 
-// 子组件
-const Todo = ({ id, text, done, onToggle }) => {
+//子组件
+const Todo = ({ id, text, done, onToggle, onDelete }) => {
   return (
     <div className={classNames("todo", done && "todo-done")}>
       <div onClick={() => onToggle(id)}>{text}</div>
-      <button>X</button>
+      <button onClick={() => onDelete(id)}>X</button>
     </div>
   );
 };
 
-// 任务列表数据
-const defaultTodos = [
-  { id: 1, text: "学习React", done: false },
-  { id: 2, text: "休息", done: true },
-  { id: 3, text: "吃饭", done: false },
-];
-
 //父组件
 const App = () => {
+  const defaultTodos = [
+    { id: 1, text: "大傻屌", done: false },
+    { id: 2, text: "哈哈", done: true },
+    { id: 3, text: "西西", done: false },
+  ];
+
   const [todos, setTodos] = useState(defaultTodos);
 
   const onToggle = (id) => {
-    setTodos(
+    return setTodos(
       todos.map((item) => {
         if (item.id === id) {
           return { ...item, done: !item.done };
@@ -38,6 +37,10 @@ const App = () => {
         return item;
       })
     );
+  };
+
+  const onDelete = (id) => {
+    return setTodos(todos.filter((item) => item.id != id));
   };
 
   return (
@@ -51,6 +54,7 @@ const App = () => {
             text={item.text}
             done={item.done}
             onToggle={onToggle}
+            onDelete={onDelete}
           ></Todo>
         );
       })}
